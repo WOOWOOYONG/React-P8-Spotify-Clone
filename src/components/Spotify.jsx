@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import Body from "./Body";
 import Footer from "./Footer";
@@ -10,6 +10,17 @@ import { reducerCases } from "../utils/Constants";
 
 export const Spotify = () => {
   const [{ token }, dispatch] = useStateProvider();
+  const bodyRef = useRef();
+  const [navBackground, setNavBackground] = useState(false);
+  const [headerBackground, setHeaderBackground] = useState(false);
+  const bodyscrolled = () => {
+    bodyRef.current.scrollTop >= 30
+      ? setNavBackground(true)
+      : setNavBackground(false);
+    bodyRef.current.scrollTop >= 268
+      ? setHeaderBackground(true)
+      : setHeaderBackground(false);
+  };
   useEffect(() => {
     const getUserInfo = async () => {
       const { data } = await axios.get("https://api.spotify.com/v1/me", {
@@ -18,7 +29,6 @@ export const Spotify = () => {
           "Content-Type": "application/json",
         },
       });
-      console.log(data);
       const userInfo = {
         userId: data.id,
         userName: data.display_name,
@@ -31,10 +41,10 @@ export const Spotify = () => {
     <Container>
       <div className="spotify_body">
         <Sidebar />
-        <div className="body">
-          <Navbar />
+        <div className="body" ref={bodyRef} onScroll={bodyscrolled}>
+          <Navbar navBackground={navBackground} />
           <div className="body_contents">
-            <Body />
+            <Body headerBackground={headerBackground} />
           </div>
         </div>
       </div>
@@ -64,5 +74,11 @@ const Container = styled.div`
     height: 100%;
     width: 100%;
     overflow: auto;
+    &::-webkit-scrollbar {
+      width: 0.7rem;
+      &-thumb {
+        background-color: rgba(255, 255, 255, 0.6);
+      }
+    }
   }
 `;
