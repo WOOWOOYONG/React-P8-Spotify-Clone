@@ -5,7 +5,7 @@ import { clientid } from "../clientid";
 export const Login = () => {
   const handleClick = () => {
     const clientId = clientid;
-    const redirectUrl = "http://localhost:3000/";
+    const redirectUrl = "https://woowooyong.github.io/React-P8-Spotify-Clone/";
     const apiUrl = "https://accounts.spotify.com/authorize";
     const scope = [
       "user-read-email",
@@ -17,9 +17,10 @@ export const Login = () => {
       "user-top-read",
       "user-read-recently-played",
     ];
-    window.location.href = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(
+    const loginUrl = `${apiUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=${scope.join(
       " "
     )}&response_type=token&show_daialog=true`;
+    window.location.href = loginUrl;
   };
   return (
     <Container>
